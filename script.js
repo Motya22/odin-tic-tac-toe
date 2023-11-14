@@ -1,7 +1,13 @@
+// GAMEBOARD
 const gameBoard = (function () {
   const ROWS = 3;
   const COLUMNS = 3;
   const board = [];
+  // const board = [
+  //   ['X', 'O', 'X'],
+  //   ['O', 'O', 'X'],
+  //   ['O', 'X', 'O'],
+  // ];
 
   for (let i = 0; i < ROWS; i++) {
     board[i] = [];
@@ -33,6 +39,7 @@ const gameBoard = (function () {
   return { getBoard, dropToken, printBoard };
 })();
 
+// CELL
 function createCell() {
   let value = '';
 
@@ -48,10 +55,12 @@ function createCell() {
   };
 }
 
+// PLAYER
 function createPlayer(name, token) {
   return { name, token };
 }
 
+// GAME CONTROLLER
 const gameController = (function (
   playerOneName = 'Player One',
   playerTwoName = 'Player Two'
@@ -170,5 +179,50 @@ const gameController = (function (
 
   return {
     playRound,
+    getBoard: gameBoard.getBoard,
   };
+})();
+
+// DISPLAY CONTROLLER
+const displayController = (function () {
+  const boardEl = document.querySelector('.board');
+
+  const updateDisplay = () => {
+    boardEl.innerHTML = '';
+
+    const board = gameController.getBoard();
+
+    // Render board
+    board.forEach((row, rowIndex) => {
+      row.forEach((cell, columnIndex) => {
+        const cellEl = document.createElement('button');
+        cellEl.classList.add('cell');
+
+        cellEl.dataset.coordinates = `${rowIndex}-${columnIndex}`;
+        cellEl.textContent = cell.getValue();
+
+        boardEl.appendChild(cellEl);
+      });
+    });
+  };
+
+  // Add event listener for the board
+  function clickHandlerBoard(e) {
+    const selectedCellCoordinates = e.target.dataset.coordinates;
+
+    if (!selectedCellCoordinates) return;
+
+    const board = gameController.getBoard();
+    const [row, column] = selectedCellCoordinates.split('-');
+    const selectedCell = board[row][column];
+
+    if (selectedCell.getValue() !== '') return;
+
+    gameController.playRound(row, column);
+    updateDisplay();
+  }
+  boardEl.addEventListener('click', clickHandlerBoard);
+
+  // Initial render
+  updateDisplay();
 })();
