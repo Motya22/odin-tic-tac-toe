@@ -180,6 +180,14 @@ const gameController = (function (
     printNewRound();
   };
 
+  const restartGame = () => {
+    isGameOver = false;
+
+    gameBoard
+      .getBoard()
+      .forEach((row) => row.forEach((cell) => cell.addToken('')));
+  };
+
   printNewRound();
 
   return {
@@ -189,6 +197,7 @@ const gameController = (function (
     getIsBoardCompletelyFilled,
     getIsCurrentPlayerWin,
     getIsGameOver,
+    restartGame,
   };
 })();
 
@@ -196,6 +205,14 @@ const gameController = (function (
 const displayController = (function () {
   const boardEl = document.querySelector('.board');
   const resultEl = document.querySelector('.result');
+
+  // Add restart button
+  const restartBtn = document.createElement('button');
+  restartBtn.classList.add('restart-btn');
+
+  restartBtn.textContent = 'Restart';
+
+  boardEl.insertAdjacentElement('afterend', restartBtn);
 
   const updateDisplay = () => {
     boardEl.innerHTML = '';
@@ -210,6 +227,8 @@ const displayController = (function () {
       resultEl.textContent = "It's a draw!";
     } else if (isCurrentPlayerWin()) {
       resultEl.textContent = `${activePlayer.name} wins!`;
+    } else {
+      resultEl.textContent = '';
     }
 
     // Render board
@@ -242,6 +261,13 @@ const displayController = (function () {
     updateDisplay();
   }
   boardEl.addEventListener('click', clickHandlerBoard);
+
+  // Add event listener for restart button
+  function clickHandlerRestartButton() {
+    gameController.restartGame();
+    updateDisplay();
+  }
+  restartBtn.addEventListener('click', clickHandlerRestartButton);
 
   // Initial render
   updateDisplay();
