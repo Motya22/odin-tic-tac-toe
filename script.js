@@ -204,6 +204,7 @@ const gameController = (function (
 // DISPLAY CONTROLLER
 const displayController = (function () {
   const boardEl = document.querySelector('.board');
+  const playerTurnEl = document.querySelector('.turn');
   const resultEl = document.querySelector('.result');
 
   // Add restart button
@@ -230,6 +231,9 @@ const displayController = (function () {
     } else {
       resultEl.textContent = '';
     }
+
+    // Display player's turn
+    playerTurnEl.textContent = `${activePlayer.name}'s turn...`;
 
     // Render board
     board.forEach((row, rowIndex) => {
