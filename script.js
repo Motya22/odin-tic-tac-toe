@@ -76,6 +76,7 @@ const gameController = (function (
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
   const getActivePlayer = () => activePlayer;
+  const getIsGameOver = () => isGameOver;
 
   const printNewRound = () => {
     gameBoard.printBoard();
@@ -144,10 +145,14 @@ const gameController = (function (
     return false;
   };
 
+  const getIsCurrentPlayerWin = () => isCurrentPlayerWin;
+
   const isBoardCompletelyFilled = () =>
     gameBoard
       .getBoard()
       .every((row) => row.every((cell) => cell.getValue() !== ''));
+
+  const getIsBoardCompletelyFilled = () => isBoardCompletelyFilled;
 
   const playRound = (row, column) => {
     if (isGameOver) return;
@@ -179,18 +184,33 @@ const gameController = (function (
 
   return {
     playRound,
+    getActivePlayer,
     getBoard: gameBoard.getBoard,
+    getIsBoardCompletelyFilled,
+    getIsCurrentPlayerWin,
+    getIsGameOver,
   };
 })();
 
 // DISPLAY CONTROLLER
 const displayController = (function () {
   const boardEl = document.querySelector('.board');
+  const resultEl = document.querySelector('.result');
 
   const updateDisplay = () => {
     boardEl.innerHTML = '';
 
     const board = gameController.getBoard();
+    const activePlayer = gameController.getActivePlayer();
+    const isBoardCompletelyFilled = gameController.getIsBoardCompletelyFilled();
+    const isCurrentPlayerWin = gameController.getIsCurrentPlayerWin();
+    const isGameOver = gameController.getIsGameOver();
+
+    if (isBoardCompletelyFilled() && !isCurrentPlayerWin()) {
+      resultEl.textContent = "It's a draw!";
+    } else if (isCurrentPlayerWin()) {
+      resultEl.textContent = `${activePlayer.name} wins!`;
+    }
 
     // Render board
     board.forEach((row, rowIndex) => {

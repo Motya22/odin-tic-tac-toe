@@ -364,8 +364,10 @@ body {
   min-height: 100%;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
 @supports (overflow: clip) {
@@ -380,7 +382,6 @@ body {
 
 /* BOARD */
 .board {
-  flex-grow: 1;
   max-width: 290px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
