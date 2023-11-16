@@ -3,11 +3,6 @@ const gameBoard = (function () {
   const ROWS = 3;
   const COLUMNS = 3;
   const board = [];
-  // const board = [
-  //   ['X', 'O', 'X'],
-  //   ['O', 'O', 'X'],
-  //   ['O', 'X', 'O'],
-  // ];
 
   for (let i = 0; i < ROWS; i++) {
     board[i] = [];
@@ -71,12 +66,21 @@ const gameController = (function (
   ];
   let activePlayer = players[0];
   let isGameOver = false;
+  let isGameStart = false;
+
+  const addPlayerNames = (playerNames) => {
+    players.forEach((player) => (player.name = playerNames[player.token]));
+  };
+
+  const startGame = () => {
+    isGameStart = true;
+  };
 
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
   const getActivePlayer = () => activePlayer;
-  const getIsGameOver = () => isGameOver;
+  const getIsGameStart = () => isGameStart;
 
   const printNewRound = () => {
     gameBoard.printBoard();
@@ -196,8 +200,10 @@ const gameController = (function (
     getBoard: gameBoard.getBoard,
     getIsBoardCompletelyFilled,
     getIsCurrentPlayerWin,
-    getIsGameOver,
     restartGame,
+    getIsGameStart,
+    startGame,
+    addPlayerNames,
   };
 })();
 
@@ -206,6 +212,8 @@ const displayController = (function () {
   const boardEl = document.querySelector('.board');
   const playerTurnEl = document.querySelector('.turn');
   const resultEl = document.querySelector('.result');
+  const namesEl = document.querySelector('.names');
+  const addNamesFormEl = document.querySelector('#add-names-form');
 
   // Add restart button
   const restartBtn = document.createElement('button');
@@ -222,8 +230,12 @@ const displayController = (function () {
     const activePlayer = gameController.getActivePlayer();
     const isBoardCompletelyFilled = gameController.getIsBoardCompletelyFilled();
     const isCurrentPlayerWin = gameController.getIsCurrentPlayerWin();
-    const isGameOver = gameController.getIsGameOver();
+    const isGameStart = gameController.getIsGameStart();
 
+    // Hide the player names form if the game has started
+    if (isGameStart) namesEl.classList.add('hidden');
+
+    // Shows a winner
     if (isBoardCompletelyFilled() && !isCurrentPlayerWin()) {
       resultEl.textContent = "It's a draw!";
     } else if (isCurrentPlayerWin()) {
@@ -272,6 +284,21 @@ const displayController = (function () {
     updateDisplay();
   }
   restartBtn.addEventListener('click', clickHandlerRestartButton);
+
+  // Add event listener for player names form
+  function submitHandlerAddNamesForm(e) {
+    e.preventDefault();
+
+    // Add player names
+    const xPlayerName = addNamesFormEl.querySelector('#X-player-name').value;
+    const oPlayerName = addNamesFormEl.querySelector('#O-player-name').value;
+    const playerNames = { X: xPlayerName, O: oPlayerName };
+    gameController.addPlayerNames(playerNames);
+
+    gameController.startGame();
+    updateDisplay();
+  }
+  addNamesFormEl.addEventListener('submit', submitHandlerAddNamesForm);
 
   // Initial render
   updateDisplay();

@@ -9,6 +9,57 @@
   </head>
   <body>
     <div class="wrapper">
+      <div class="names">
+        <form action="" method="post" id="add-names-form" class="form">
+          <h1 class="form__title">Tic Tac Toe</h1>
+          <div class="form__row">
+            <label for="X-player-name"
+              >X player name<strong
+                ><span aria-label="required">*</span></strong
+              ></label
+            >
+            <input
+              type="text"
+              name="X-player-name"
+              id="X-player-name"
+              placeholder="John"
+              pattern="^[^0-9]+$"
+              title="Please enter a X player name consisting of letters only."
+              size="30"
+              maxlength="245"
+              required
+            />
+            <span></span>
+          </div>
+          <div class="form__row">
+            <label for="O-player-name"
+              >O player name<strong
+                ><span aria-label="required">*</span></strong
+              ></label
+            >
+            <input
+              type="text"
+              name="O-player-name"
+              id="O-player-name"
+              placeholder="John"
+              pattern="^[^0-9]+$"
+              title="Please enter a O player name consisting of letters only."
+              size="30"
+              maxlength="245"
+              required
+            />
+            <span></span>
+          </div>
+          <button
+            type="submit"
+            class="btn"
+            id="submit-start-btn"
+            value="default"
+          >
+            Start
+          </button>
+        </form>
+      </div>
       <div class="result"></div>
       <div class="board"></div>
       <div class="turn"></div>
