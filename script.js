@@ -80,6 +80,7 @@ const gameController = (function (
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
   const getActivePlayer = () => activePlayer;
+  const getIsGameOver = () => isGameOver;
   const getIsGameStart = () => isGameStart;
 
   const printNewRound = () => {
@@ -201,6 +202,7 @@ const gameController = (function (
     getIsBoardCompletelyFilled,
     getIsCurrentPlayerWin,
     restartGame,
+    getIsGameOver,
     getIsGameStart,
     startGame,
     addPlayerNames,
@@ -217,6 +219,7 @@ const displayController = (function () {
 
   // Add restart button
   const restartBtn = document.createElement('button');
+  restartBtn.classList.add('btn');
   restartBtn.classList.add('restart-btn');
 
   restartBtn.textContent = 'Restart';
@@ -230,6 +233,7 @@ const displayController = (function () {
     const activePlayer = gameController.getActivePlayer();
     const isBoardCompletelyFilled = gameController.getIsBoardCompletelyFilled();
     const isCurrentPlayerWin = gameController.getIsCurrentPlayerWin();
+    const isGameOver = gameController.getIsGameOver();
     const isGameStart = gameController.getIsGameStart();
 
     // Hide the player names form if the game has started
@@ -255,6 +259,8 @@ const displayController = (function () {
 
         cellEl.dataset.coordinates = `${rowIndex}-${columnIndex}`;
         cellEl.textContent = cell.getValue();
+
+        if (isGameOver) cellEl.disabled = true;
 
         boardEl.appendChild(cellEl);
       });
